@@ -5,6 +5,7 @@
   "main": "src/index.js",
   "author": "Igor Pereira",
   "license": "MIT",
+  "scripts": {"dev": "nodemon src/index.js"},
   "dependencies": {
     "express": "^4.18.2"
   },
