@@ -1,0 +1,51 @@
+version: "3.8"
+
+services:
+
+  postgres_db:
+    container_name: postgres
+    hostname: postgres
+    build: ./docker/postgres_container
+    env_file:
+        - ./.env.db
+    volumes:
+      - $PWD/docker/postgres_container/pgdata:/var/lib/postgresql/data
+      - $PWD/docker/postgres_container/feedDB.sh:/docker-entrypoint-initdb.d/10-init.sh
+      # if you want some data restore, point to your backup
+      - $PWD/docker/postgres_container/backups:/db_backup
+      - $PWD/docker/postgres_container/databases:/databases
+      # point docker to directory with your config
+      #- $PWD/docker/postgres_container/configs:/db_config
+    networks:
+      - backend
+    ports:
+    # - 15433:5432
+      - published: 15433 # HOST PORT
+        target: 5432 # CONTAINER PORT
+        protocol: tcp
+        mode: host
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    hostname: pgadmin
+    container_name: pgadmin
+    restart: always
+    env_file:
+        - ./.env.pgadmin
+    depends_on:
+      - postgres_db
+    volumes:
+      - $PWD/docker/pgadmin_container/servers.json:/pgadmin4/servers.json
+      - $PWD/docker/pgadmin_container/entrypoint.sh:/docker-entrypoint-initdb.d/10-entrypoint.sh
+    ports:
+      #- 8081:80
+      - published: 8081 # HOST PORT
+        target: 80 # CONTAINER PORT
+        protocol: tcp
+        mode: host
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge

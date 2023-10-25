@@ -1,0 +1,14 @@
+{
+  "Servers": {
+      "docker-postgres": {
+          "Name": "myContacts",
+          "Group": "Servers",
+          "Port": 5432,
+          "Username": "mycontactsadmin",
+          "Host": "postgres",
+          "SSLMode": "prefer",
+          "MaintenanceDB": "postgres"
+      }
+
+  }
+}
