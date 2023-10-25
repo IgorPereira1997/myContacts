@@ -20,20 +20,18 @@ let contacts = [
 ];
 
 class ContactsRepository{
-  findAll() {
-    return new Promise((resolve, reject) => {
-      resolve(contacts);
-    });
+  async findAll(orderBy = "ASC") {
+    const direction = orderBy.toUpperCase() === 'DESC' ? 'DESC' : 'ASC';
+    const rows = await db.query(`SELECT * FROM contacts ORDER BY name ${direction}`);
+    return rows;
   }
-  findById(id){
-    return new Promise((resolve, reject) => {
-      resolve(contacts.find((contact) => contact.id === id));
-    });
+  async findById(id){
+    const [row] = await db.query(`SELECT * FROM contacts WHERE id = $1`, [id]);
+    return row;
   }
-  findByEmail(email){
-    return new Promise((resolve, reject) => {
-      resolve(contacts.find((contact) => contact.email === email));
-    });
+  async findByEmail(email){
+    const [row] = await db.query(`SELECT * FROM contacts WHERE email = $1`, [email]);
+    return row;
   }
   async create({ name, email, phone, category_id}){
     const [row] = await db.query(`
@@ -42,17 +40,6 @@ class ContactsRepository{
     `, [name, email, phone, category_id]);
 
     return row;
-    // return new Promise((resolve, reject) => {
-    //   const newContact = {
-    //     id: v4(),
-    //     name: name,
-    //     email: email,
-    //     phone: phone,
-    //     category_id: category_id
-    //   };
-    //   contacts.push(newContact);
-    //   resolve(newContact);
-    // });
   }
   update(id, { name, email, phone, category_id }){
     return new Promise((resolve, reject) => {
