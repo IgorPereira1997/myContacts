@@ -3,12 +3,14 @@ module.exports = {
     commonjs: true,
     es2021: true,
     node: true,
+    yarn: true,
   },
   extends: 'airbnb-base',
   overrides: [
     {
       env: {
         node: true,
+        yarn: true,
       },
       files: [
         '.eslintrc.{js,cjs}',
@@ -24,5 +26,6 @@ module.exports = {
   rules: {
     'class-methods-use-this': 'off',
     camelcase: 'off',
+    'no-unused-vars': ['error', { argsIgnorePattern: 'next' }],
   },
 };
